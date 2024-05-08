@@ -1,6 +1,7 @@
 dnspython
 Flask
 itsdangerous
+jwts
 Jinja2
 MarkupSafe
 pymongo
