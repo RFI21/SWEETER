@@ -137,6 +137,7 @@ def save_img():
         name_receive = request.form["name_give"]
         about_receive = request.form["about_give"]
         new_doc = {"profile_name": name_receive, "profile_info": about_receive}
+        new_post = {"profile_name": name_receive}
         if "file_give" in request.files:
             file = request.files["file_give"]
             filename = secure_filename(file.filename)
@@ -145,7 +146,10 @@ def save_img():
             file.save("./static/" + file_path)
             new_doc["profile_pic"] = filename
             new_doc["profile_pic_real"] = file_path
+            new_post["profile_pic"] = filename
+            new_post["profile_pic_real"] = file_path
         db.users.update_one({"username": payload["id"]}, {"$set": new_doc})
+        db.posts.update_many({"username": payload["id"]}, {"$set": new_post})
         return jsonify({"result": "success", "msg": "Profile updated!"})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
